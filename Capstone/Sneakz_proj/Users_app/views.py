@@ -1,9 +1,12 @@
+import collections
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import *
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from Posts_app.models import Post
 
 # Create your views here.
 def signup(request):
@@ -47,7 +50,15 @@ def user_login(request):
                 })
 
 def profile(request):
-    return render(request, 'Users_app/profile.html')
+    posts = Post.objects.all().filter(user=request.user)
+    return render(request, 'Users_app/profile.html', {
+        'posts': posts
+    })
 
 def user_logout(request):
     logout(request)
+    return HttpResponseRedirect(reverse('login'))
+
+def user_collection(request):
+    return render(request, 'Users_app/collection.html')
+

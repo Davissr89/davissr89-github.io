@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>{{post.text}}</p>
+    {% if request.user == post.user %}
+        <a href="{% url 'delete_post' post.id %}">❌ Delete</a>
+    {% endif %}
+    <h6>{{post.user}}</h6>
+
+    {% if not request.user.is_anonymous %}
+    <a href="{%url 'like' post.id %}">👍Likes: {{post.likes}}</a>
+    <a href="{%url 'dislike' post.id %}">👎Dislikes: {{post.dislikes}}</a>
+    {% endif %}
+    <p>{{post.published_date}}</p>
+    <hr>
+
+    <h2>REPLIES</h2>
+    {% if not request.user.is_anonymous %}
+    <form action="{% url 'reply' %}" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Reply">
+    </form>
+    {% endif %}
+    <p>{{post.published_date}}</p>
+
+    {% for post in posts %}
+       <div> 
+            <p>{{post.text}}</p>
+
+            {% if request.user == post.user %}
+                <a href="{% url 'delete_post' post.id %}">❌ Delete</a>
+            {% endif %}
+
+            <h6>{{post.user}}</h6>
+
+            <a href="{%url 'like' post.id %}">👍Likes: {{post.likes}}</a>
+            <a href="{%url 'dislike' post.id %}">👎Dislikes: {{post.dislikes}}</a>
+
+            <p>{{post.published_date}}</p>
+       </div>
+       <hr>
+    {% endfor %}
+
+</body>
+</html>
